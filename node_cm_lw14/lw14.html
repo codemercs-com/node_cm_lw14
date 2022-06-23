@@ -1,0 +1,322 @@
+<!-- SEND DALI DACP VALUE (0...254 direct output) -->
+<script type="text/html" data-template-name="lw14 dacp">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+	<div class="form-row">
+        <label for="node-input-busno"><i class="fa fa-random"></i> Bus Number</label>
+        /dev/i2c- <input id="node-input-busno" class="I2C-in-address" placeholder="[msg.bus]" min=0 max=7 style="width:40px; height:16px;">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-address-card-o"></i> Bus Addr.</label>
+        0x <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" style="width:100px;" min=3 max=127>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_type"><i class="fa fa-tag"></i> Type</label>
+        <select id="node-input-dali_type" class="dacp-dali_type" style="width:125px !important" required>
+            <option selected value="0">Broadcast</option>
+            <option value="1">Group</option>
+            <option value="2">Single/Short</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_adr"><i class="fa fa-empire"></i> Device adr.</label>
+        <input type="number" id="node-input-dali_adr" class="dacp-dali_adr" placeholder="[msg.dali_adr]" style="width:100px;" min=0 max=63> (0...63)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_value"><i class="fa fa-empire"></i> Value</label>
+        <input type="number" id="node-input-dali_value" class="dacp-dali_value" placeholder="[msg.dali_value]" style="width:100px;" min=0 max=255> (0...254)
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="lw14 dacp">
+    <p>Send a output value to single/group/broadcast.</p>
+	<p>A overview about the output in % can be found in DIN IEC 62386 or our github page.</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType('lw14 dacp',
+		{
+			category: 'LW14',
+			defaults:
+			{
+				name: { value: "" },
+				busno: { value: "1" },
+				address: { value: 23, required: true },
+				dali_type: { value: "0", required: true },
+				dali_adr: { value: "0", required: true },
+				dali_value: { value: 0, required: true }
+			},
+			color: "#66CDAA",
+			inputs: 1,
+			outputs: 1,
+			icon: "sign-out.png", //https://fontawesome.com/v4.7/icons/
+			align: "right",
+			label: function () { return this.name || 'Send DACP'; },
+			labelStyle: function () { return this.name ? "node_label_italic" : ""; },
+			oneditprepare: function () {
+				if (this.busno === undefined) {
+					$("#node-input-busno").val(1);
+				}
+				$("#node-input-busno").spinner({
+					min: 0,
+					max: 7
+				});
+			},
+			oneditsave: function () { },
+			oneditcancel: function () { },
+			oneditdelete: function () { },
+			oneditresize: function () { }
+		});
+</script>
+
+
+<!-- SEND DALI COMMAND VALUE (MIN, MAX, etc.) -->
+<script type="text/html" data-template-name="lw14 cmd">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+	<div class="form-row">
+        <label for="node-input-busno"><i class="fa fa-random"></i> Bus Number</label>
+        /dev/i2c- <input id="node-input-busno" class="I2C-in-address" placeholder="[msg.bus]" min=0 max=7 style="width:40px; height:16px;">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-address-card-o"></i> Bus Addr.</label>
+        0x <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" style="width:100px;" min=3 max=127> (7bit)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_type"><i class="fa fa-tag"></i> Type</label>
+        <select id="node-input-dali_type" class="dacp-dali_type" style="width:125px !important" required>
+            <option selected value="0">Broadcast</option>
+            <option value="1">Group</option>
+            <option value="2">Single/Short</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_adr"><i class="fa fa-empire"></i> Device adr.</label>
+        <input type="number" id="node-input-dali_adr" class="dacp-dali_adr" placeholder="[msg.dali_adr]" style="width:100px;" min=0 max=63> (0...63)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_value"><i class="fa fa-empire"></i> Value</label>
+        <input type="number" id="node-input-dali_value" class="dacp-dali_value" placeholder="[msg.dali_value]" style="width:100px;" min=0 max=255> (0...254)
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="lw14 cmd">
+    <p>Send a command to single/group/broadcast.</p>
+	<p>A complete command list can be found in DIN IEC 62386</p>
+	<p>Basic Commands:<br>
+		OFF = 0<br>
+		UP = 1<br>
+		DOWN = 2<br>
+		STEP UP = 3<br>
+		STEP DOWN = 4<br>
+		MAX = 5<br>
+		MIN = 6<br>
+		STEP DOWN AND OFF = 7<br>
+		ON AND STEP UP = 8<br>
+	</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType('lw14 cmd',
+		{
+			category: 'LW14',
+			defaults:
+			{
+				name: { value: "" },
+				busno: { value: "1" },
+				address: { value: 23, required: true },
+				dali_type: { value: "0", required: true },
+				dali_adr: { value: "0", required: true },
+				dali_value: { value: 0, required: true }
+			},
+			color: "#66CDAA",
+			inputs: 1,
+			outputs: 1,
+			icon: "sign-out.png", //https://fontawesome.com/v4.7/icons/
+			align: "right",
+			label: function () { return this.name || 'Send COMMAND'; },
+			labelStyle: function () { return this.name ? "node_label_italic" : ""; },
+			oneditprepare: function () {
+				if (this.busno === undefined) {
+					$("#node-input-busno").val(1);
+				}
+				$("#node-input-busno").spinner({
+					min: 0,
+					max: 7
+				});
+			},
+			oneditsave: function () { },
+			oneditcancel: function () { },
+			oneditdelete: function () { },
+			oneditresize: function () { }
+		});
+</script>
+
+
+
+<!-- CALL A SCENE -->
+<script type="text/html" data-template-name="lw14 scene">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+	<div class="form-row">
+        <label for="node-input-busno"><i class="fa fa-random"></i> Bus Number</label>
+        /dev/i2c- <input id="node-input-busno" class="I2C-in-address" placeholder="[msg.bus]" min=0 max=7 style="width:40px; height:16px;">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-address-card-o"></i> Bus Addr.</label>
+        0x <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" style="width:100px;" min=3 max=127> (7bit)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_type"><i class="fa fa-tag"></i> Type</label>
+        <select id="node-input-dali_type" class="scene-dali_type" style="width:125px !important" required>
+            <option selected value="0">Broadcast</option>
+            <option value="1">Group</option>
+        	<option value="2">Single/Short</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_adr"><i class="fa fa-empire"></i> Device adr.</label>
+        <input type="number" id="node-input-dali_adr" class="scene-dali_adr" placeholder="[msg.dali_adr]" style="width:100px;" min=0 max=63> (0...63)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_value"><i class="fa fa-empire"></i> Scene</label>
+        <input type="number" id="node-input-dali_value" class="scene-dali_value" placeholder="[msg.dali_value]" style="width:100px;" min=0 max=15> (0...15)
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="lw14 scene">
+    <p>Call a specific scene.</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType('lw14 scene',
+		{
+			category: 'LW14',
+			defaults:
+			{
+				name: { value: "" },
+				busno: { value: "1" },
+				address: { value: 23, required: true },
+				dali_type: { value: "0", required: true },
+				dali_adr: { value: "0", required: true },
+				dali_value: { value: 0, required: true }
+			},
+			color: "#66CDAA",
+			inputs: 1,
+			outputs: 1,
+			icon: "sign-out.png", //https://fontawesome.com/v4.7/icons/
+			align: "right",
+			label: function () { return this.name || 'Call SCENE'; },
+			labelStyle: function () { return this.name ? "node_label_italic" : ""; },
+			oneditprepare: function () {
+				if (this.busno === undefined) {
+					$("#node-input-busno").val(1);
+				}
+				$("#node-input-busno").spinner({
+					min: 0,
+					max: 7
+				});
+			},
+			oneditsave: function () { },
+			oneditcancel: function () { },
+			oneditdelete: function () { },
+			oneditresize: function () { }
+		});
+</script>
+
+
+<!-- GET QUERY VALUE FROM SINGLE DEVICE -->
+<script type="text/html" data-template-name="lw14 query">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+	<div class="form-row">
+        <label for="node-input-busno"><i class="fa fa-random"></i> Bus Number</label>
+        /dev/i2c- <input id="node-input-busno" class="I2C-in-address" placeholder="[msg.bus]" min=0 max=7 style="width:40px; height:16px;">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-address-card-o"></i> Bus Addr.</label>
+        0x <input type="number" id="node-input-address" class="I2C-out-address" placeholder="[msg.address]" style="width:100px;" min=3 max=127> (7bit)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_adr"><i class="fa fa-empire"></i> Device adr.</label>
+        <input type="number" id="node-input-dali_adr" class="query-dali_adr" placeholder="[msg.dali_adr]" style="width:100px;" min=0 max=63> (0...63)
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dali_value"><i class="fa fa-empire"></i> Value</label>
+        <input type="number" id="node-input-dali_value" class="query-dali_value" placeholder="[msg.dali_value]" style="width:100px;" min=0 max=255> (0...254)
+    </div>
+
+</script>
+
+<script type="text/html" data-help-name="lw14 query">
+    <p>Get the query value of a single device.</p>
+</script>
+
+<script type="text/javascript">
+	RED.nodes.registerType('lw14 query',
+		{
+			category: 'LW14',
+			defaults:
+			{
+				name: { value: "" },
+				busno: { value: "1" },
+				address: { value: 23, required: true },
+				dali_adr: { value: "0", required: true },
+				dali_value: { value: 0, required: true }
+			},
+			color: "#66CDAA",
+			inputs: 1,
+			outputs: 1,
+			icon: "sign-out.png", //https://fontawesome.com/v4.7/icons/
+			align: "left",
+			label: function () { return this.name || 'Get QUERY'; },
+			labelStyle: function () { return this.name ? "node_label_italic" : ""; },
+			oneditprepare: function () {
+				if (this.busno === undefined) {
+					$("#node-input-busno").val(1);
+				}
+				$("#node-input-busno").spinner({
+					min: 0,
+					max: 7
+				});
+			},
+			oneditsave: function () { },
+			oneditcancel: function () { },
+			oneditdelete: function () { },
+			oneditresize: function () { }
+		});
+</script>

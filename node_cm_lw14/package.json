@@ -1,0 +1,31 @@
+{
+    "name": "node-cm-lw14",
+    "version": "0.0.2",
+    "description": "Node for LED-Warrrio14 from Codemercs",
+    "dependencies": {
+      "i2c-bus": "^5.2.2"
+    },
+    "main": "lw14.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "node-red",
+      "lw14",
+      "LED-Warrior14",
+      "IEC62386",
+      "i2c"
+    ],
+    "node-red":{
+      "nodes":{
+        "jw56fr1": "lw14.js"
+      }
+    },
+    "author": {
+      "name": "Christoph Jung",
+      "email": "support@codemercs.com",
+      "url": "http://www.codemercs.com"
+    },
+    "readmeFilename": "README.md",
+    "license": "Apache-2.0"
+  }
